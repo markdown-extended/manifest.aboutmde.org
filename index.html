@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>{META_TITLE} &bull; aboutmde.org</title>
+    <meta name="description" content="{META_DESCRIPTION}">
+    <link rel="icon" type="image/png" href="32x32-solid.png" sizes="32x32">
+    <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="bower_components/fontawesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="bower_components/wow/css/libs/animate.css" rel="stylesheet">
+<style>
+html {
+    position: relative;
+    min-height: 100%;
+}
+body {
+    margin-bottom: 170px;
+}
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 160px;
+    background-color: #f5f5f5;
+    padding-top: 20px;
+}
+.navbar { margin-bottom: 0; }
+@media screen and (max-width: 767px) {
+    body    { margin-bottom: 300px; }
+    .footer { height: 290px; }
+    .footer .pull-left, .footer .pull-right { float: none; }
+    .footer .text-left, .footer .text-right { text-align: center; }
+}
+</style>
+</head>
+<body>
+    <a href="#page-content" class="sr-only sr-only-focusable">Skip to main content</a>
+    <a href="#page-menu" class="sr-only sr-only-focusable">Skip to main menu</a>
+
+    <nav class="navbar navbar-inverse navbar-static-top" id="page-menu">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#page-navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://aboutmde.org"><img alt="[M↓]" src="bower_components/markdown-mark/39x24-solid.png"></a>
+            </div>
+            <div class="collapse navbar-collapse" id="page-navbar">
+<!--
+    The {PAGE_ACTIVE} of the menu should have class "active" and contain :  <span class="sr-only">(current)</span>
+-->
+                <ul class="nav navbar-nav">
+                    <li class="{PAGE_ACTIVE}"><a href="http://aboutmde.org/">Home</a></li>
+                    <li class="{PAGE_ACTIVE}"><a href="http://manifest.aboutmde.org">MDE manifest</a></li>
+                    <li class="{PAGE_ACTIVE}"><a href="http://dingus.aboutmde.org">MDE dingus</a></li>
+                    <li class="{PAGE_ACTIVE}"><a href="http://api.aboutmde.org">Online API</a></li>
+                    <li class="{PAGE_ACTIVE}"><a href="http://reminders.aboutmde.org">Syntax reminders</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Implementations <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="http://github.com/piwi/markdown-extended" title="">PHP Markdown Extended</a></li>
+                            <li class="divider"></li>
+                            <li><a href="http://github.com/markdown-extended/vim-mde-syntax" title="">VIM syntax highlight</a></li>
+                        </ul>
+                    </li>
+                    <li class="active">
+                        <a href="http://github.com/markdown-extended" title="github.com/markdown-extended"><i class="fa fa-github"></i></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container main-container">
+
+        <div class="page-header" id="page-header">
+            <h1>
+                <a href="http://aboutmde.org" title="aboutmde.org"><img src="bower_components/markdown-mark/66x40-solid.png" alt="[M↓]" /></a>&nbsp; {PAGE_TITLE}
+                <br class="visible-xs"> <small><em>{PAGE_DESCRIPTION}</em></small>
+            </h1>
+        </div>
+
+        <div class="content" id="page-content" role="main">        
+
+<!-- foreach {CONTENT_COLLECTION} : -->
+
+    <!-- if {CONTENT_TITLE} : -->
+            <h2>{CONTENT_TITLE}
+        <!-- if {CONTENT_DESCRIPTION} : -->
+                &nbsp; <small><em>{CONTENT_DESCRIPTION}</em></small>
+        <!-- // if {CONTENT_DESCRIPTION} -->
+            </h2>
+    <!-- // if {CONTENT_TITLE} -->
+
+    <!-- if {CONTENT_INTRO} : -->
+            <div class="lead">
+                {CONTENT_INTRO}
+            </div>
+    <!-- // if {CONTENT_INTRO} -->
+
+            <div class="container">
+                {CONTENT}
+            </div>
+
+    <!-- if {CONTENT_NOTES} : -->
+            <ul class="list-group small">
+        <!-- foreach {CONTENT_NOTES} : -->
+                <li class="list-group-item">{CONTENT_NOTE}</li>
+        <!-- // foreach {CONTENT_NOTES} -->
+            </ul>
+    <!-- // if {CONTENT_NOTES} -->
+
+    <!-- if not last content : -->
+            <hr class="clearfix">
+    <!-- else : -->
+            <div class="clearfix"></div>
+    <!-- // if not last content -->
+
+<!-- // foreach {CONTENT_COLLECTION} -->
+        </div>
+
+    </div>
+
+    <footer class="footer" id="page-footer">
+        <div class="container">
+            <div class="cleafix">
+                <p class="text-muted small">
+                    {PAGE_FOOTER}
+<!-- modal box tester (to be deleted) : -->
+                    &nbsp;{<a href=#" data-toggle="modal" data-target="#page-modal-box">modal box test</a>}
+<!-- // modal box tester -->
+                </p>
+            </div>
+            <hr>
+            <div class="pull-left text-left">
+                <p class="text-muted small">
+                    This page is built with the help of <a href="http://jquery.com">jQuery</a>, <a href="http://getbootstrap.com">Bootstrap</a>, <a href="http://fortawesome.github.io/Font-Awesome/">Font Awesome</a> and <a href="http://mynameismatthieu.com/WOW/">WOW</a>.
+                    <br class="hidden-xs hidden-sm">
+                    Original <em>MarkdownMark</em> icon made by <a href="http://github.com/dcurtis/markdown-mark">Dustin Curits</a>.
+                </p>
+            </div>
+            <div class="pull-right text-right">
+                <p class="text-muted small">
+                    <a href="http://aboutmde.org">aboutmde.org</a>
+                    &nbsp;-&nbsp;
+                    <a href="&#x6d;&#97;&#105;&#x6c;&#x74;&#111;:&#x63;&#111;&#110;&#x74;&#x61;&#99;t&#x40;&#97;&#98;&#x6f;&#x75;&#116;&#109;&#x64;&#x65;&#46;&#x6f;&#x72;&#103;">contact [at] aboutmde [dot] org</a>
+                    <br class="hidden-xs hidden-sm">
+                    Original sources are available at <a href="http://github.com/markdown-extended">github.com/markdown-extended</a>.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+<!-- if {MODALBOX_CONTENT} : -->
+    <!--
+        To open the modal box, use: <a ... data-toggle="modal" data-target="#page-modal-box">open modal box</a>
+    -->
+    <div class="modal fade" id="page-modal-box" tabindex="-1" role="dialog" aria-labelledby="{MODALBOX_LABEL}" aria-describedby="{MODALBOX_DESCRIPTION}" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+    <!-- if {MODALBOX_TITLE} : -->
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="{MODALBOX_LABEL}">{MODALBOX_TITLE}</h4>
+                </div>
+    <!-- // if {MODALBOX_TITLE} -->
+                <div class="modal-body">
+                    {MODALBOX_CONTENT}
+                </div>
+    <!-- if {MODALBOX_FOOTER} : -->
+                <div class="modal-footer">
+                    {MODALBOX_FOOTER}
+                </div>
+    <!-- // if {MODALBOX_FOOTER} -->
+            </div>
+        </div>
+    </div>
+<!-- // if {MODALBOX_CONTENT} -->
+
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="bower_components/wow/dist/wow.min.js"></script>
+    <script>
+    var mdereminders_window; // use this variable to interact with the cheat sheet window
+    function mdereminders_popup(url){
+        if (!url) url='http://reminders.aboutmde.org/index.html?popup';
+        if (url.lastIndexOf("popup")==-1) url += (url.lastIndexOf("?")!=-1) ? '&popup' : '?popup';
+        mdereminders_window = window.open(url, 'markdown_reminders',
+            'directories=0,menubar=0,status=0,location=0,scrollbars=1,resizable=1,fullscreen=0,width=840,height=380,left=120,top=120');
+        mdereminders_window.focus();
+        return false;
+    }
+
+    new WOW().init();
+    </script>
+</body>
+</html>

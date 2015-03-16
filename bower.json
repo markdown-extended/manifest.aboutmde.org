@@ -1,0 +1,8 @@
+{
+  "name": "MDE page model - <http://aboutmde.org/>",
+  "dependencies": {
+    "bootstrap": "~3.*",
+    "fontawesome": "~4.*",
+    "wow": "~1.*"
+  }
+}
