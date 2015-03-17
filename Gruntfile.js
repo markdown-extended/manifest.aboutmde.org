@@ -47,7 +47,9 @@ module.exports = function(grunt) {
                         if (slug == active) {
                             data.website.menu[i].is_active = true;
                             data.page.page_link = data.website.menu[i].url;
-                            data.page.page_title = data.website.menu[i].title;
+                            if (data.page.page_title == undefined) {
+                                data.page.page_title = data.website.menu[i].title;
+                            }
                         } else {
                             data.website.menu[i].is_active = false;
                         }
