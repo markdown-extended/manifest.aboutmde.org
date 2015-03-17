@@ -1,0 +1,45 @@
+
+<div class="page-header" id="page-header">
+    <h1>
+        <a href="{{& page.page_link}}" title="{{page.page_title}}"><img src="{{page.page_logo}}" alt="[M↓]" /></a>&nbsp; {{page.page_title}}
+        <br class="visible-xs"> <small><em>{{page.page_description}}</em></small>
+    </h1>
+</div>
+
+<div class="content" id="page-content" role="main">        
+{{#page.contents}}
+
+    {{#title}}
+    <h2>{{title}}
+        {{#description}}
+        &nbsp; <small><em>{{description}}</em></small>
+        {{/description}}
+    </h2>
+    {{/title}}
+
+    {{#intro}}
+    <div class="lead">{{intro}}</div>
+    {{/intro}}
+
+    <div class="container">
+        {{content}}
+    </div>
+
+    {{#has_notes}}
+    <ul class="list-group small">
+        {{#notes}}
+        <li class="list-group-item">{{content}}</li>
+        {{/notes}}
+    </ul>
+    {{/has_notes}}
+
+    {{#show_hr}}
+    <hr class="clearfix">
+    {{/show_hr}}
+    {{^show_hr}}
+    <div class="clearfix"></div>
+    {{/show_hr}}
+
+{{/page.contents}}
+</div>
+

@@ -37,7 +37,8 @@ module.exports = function(grunt) {
         },
         mustache_render: {
             options: {
-                clear_cache: true
+                clear_cache: true,
+                directory: "./templates/"
             },
             all: {
                 files : [{
