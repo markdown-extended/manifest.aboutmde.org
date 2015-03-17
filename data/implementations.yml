@@ -1,0 +1,23 @@
+- name:         php-markdown-extended
+  description:  "A PHP parser for the Markdown Extended syntax"
+  version:      0.1-gamma.5
+  link:         http://github.com/piwi/markdown-extended
+  status:       alpha
+  host:         GitHub
+  last_release: http://github.com/piwi/markdown-extended/releases/tag/v0.1-gamma.5
+  repository:   http://github.com/piwi/markdown-extended
+  watch_url:    http://github.com/piwi/markdown-extended
+  api_infos:    https://api.github.com/repos/piwi/markdown-extended/
+  manifest:     submodules/php-markdown-extended.git/composer.json
+  zipfile:      http://github.com/piwi/markdown-extended/zipball/master
+  tarball:      http://github.com/piwi/markdown-extended/tarball/master
+
+- name:         ruby-gem
+  version:      0.0.1
+  link:         https://github.com/markdown-extended/ruby-gem
+  status:       stable
+  host:         GitHub
+  last_release: https://github.com/markdown-extended/ruby-gem/releases/tag/v0.0.1
+  repository:   https://github.com/markdown-extended/ruby-gem
+  zipfile:      http://github.com/markdown-extended/ruby-gem/zipball/master
+  tarball:      http://github.com/markdown-extended/ruby-gem/tarball/master

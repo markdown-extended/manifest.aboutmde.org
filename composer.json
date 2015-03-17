@@ -1,0 +1,19 @@
+{
+    "name": "markdown-extended",
+    "description": "Source code of the <aboutmde.org> and sub-domains websites",
+    "homepage": "http://github.com/markdown-extended",
+    "license": "CC BY-NC-SA 4.0",
+    "require": {},
+    "minimum-stability": "dev",
+    "config": {
+        "bin-dir": "bin"
+    },
+    "scripts": { 
+        "post-install-cmd": [
+            "bower install"
+        ],
+        "post-update-cmd": [
+            "bower install"
+        ]
+    }
+}

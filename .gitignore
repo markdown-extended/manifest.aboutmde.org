@@ -1,1 +1,15 @@
-bower_components/
+# for all forks
+.devtools*
+composer.lock
+vendor/*
+*/vendor/*
+tmp/*
+*/tmp/*
+var/*
+*/var/*
+www/bower_components/
+node_modules/
+
+# for this main repo only
+www/index.html
+www/config.json

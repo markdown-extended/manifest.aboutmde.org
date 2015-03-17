@@ -4,8 +4,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-    <title>{META_TITLE} &bull; aboutmde.org</title>
-    <meta name="description" content="{META_DESCRIPTION}">
+    <title>{{page.meta_title}} &bull; {{website.shortname}}</title>
+    <meta name="description" content="{{page.meta_description}}">
     <link rel="icon" type="image/png" href="32x32-solid.png" sizes="32x32">
     <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="bower_components/fontawesome/css/font-awesome.min.css" rel="stylesheet">
@@ -46,30 +46,33 @@ body {
                     <span class="sr-only">Toggle navigation</span>
                     <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="http://aboutmde.org" title="**Markdown** _extended_ - aboutmde.org">MDE</a>
+                <a class="navbar-brand" href="{{& website.home}}" title="{{website.presentation}}">{{website.name}}</a>
             </div>
             <div class="collapse navbar-collapse" id="page-navbar">
-<!--
-    The {PAGE_ACTIVE} of the menu should have class "active" and contain :  <span class="sr-only">(current)</span>
--->
                 <ul class="nav navbar-nav">
-                    <li class="{PAGE_ACTIVE}"><a href="http://aboutmde.org/">Home</a></li>
-                    <li class="{PAGE_ACTIVE}"><a href="http://manifest.aboutmde.org">MDE manifest</a></li>
-                    <li class="{PAGE_ACTIVE}"><a href="http://dingus.aboutmde.org">MDE dingus</a></li>
-                    <li class="{PAGE_ACTIVE}"><a href="http://api.aboutmde.org">Online API</a></li>
-                    <li class="{PAGE_ACTIVE}"><a href="http://reminders.aboutmde.org">Syntax reminders</a></li>
+                {{#website.menu}}
+                    <li class="{{#is_active}}active{{/is_active}}"><a href="{{& url}}">{{title}}{{#is_active}} <span class="sr-only">(current)</span>{{/is_active}}</a></li>
+                {{/website.menu}}
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Tools <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu" id="tools-list">
+                        {{#tools}}
+                            <li><a href="{{& link}}" title="{{description}}">{{name}}</a></li>
+                        {{/tools}}
+                        </ul>
+                    </li>
+                    <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Implementations <span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu" id="implementations-list">
-                            <li class="divider"></li>
-                            <li role="presentation" class="dropdown-header">Want to build your own?</li>
-                            <li><a href="http://github.com/markdown-extended/test-suite" title="A complete specifications test suite">MDE test suite</a></li>
+                        {{#implementations}}
+                            <li><a href="{{& link}}" title="{{description}}">{{name}}</a></li>
+                        {{/implementations}}
                         </ul>
                     </li>
                     <li>
-                        <a href="http://github.com/markdown-extended" title="github.com/markdown-extended"><i class="fa fa-github"></i></a>
+                        <a href="{{& website.sources}}" title="{{website.sources}}"><i class="fa fa-github"></i></a>
                     </li>
                 </ul>
             </div>
@@ -80,48 +83,46 @@ body {
 
         <div class="page-header" id="page-header">
             <h1>
-                <a href="http://aboutmde.org" title="aboutmde.org"><img src="bower_components/markdown-mark/66x40-solid.png" alt="[M↓]" /></a>&nbsp; {PAGE_TITLE}
-                <br class="visible-xs"> <small><em>{PAGE_DESCRIPTION}</em></small>
+                <a href="{{& page.page_link}}" title="{{page.page_title}}"><img src="{{page.page_logo}}" alt="[M↓]" /></a>&nbsp; {{page.page_title}}
+                <br class="visible-xs"> <small><em>{{page.page_description}}</em></small>
             </h1>
         </div>
 
         <div class="content" id="page-content" role="main">        
+        {{#page.contents}}
 
-<!-- foreach {CONTENT_COLLECTION} : -->
-
-    <!-- if {CONTENT_TITLE} : -->
-            <h2>{CONTENT_TITLE}
-        <!-- if {CONTENT_DESCRIPTION} : -->
-                &nbsp; <small><em>{CONTENT_DESCRIPTION}</em></small>
-        <!-- // if {CONTENT_DESCRIPTION} -->
+            {{#title}}
+            <h2>{{title}}
+                {{#description}}
+                &nbsp; <small><em>{{description}}</em></small>
+                {{/description}}
             </h2>
-    <!-- // if {CONTENT_TITLE} -->
+            {{/title}}
 
-    <!-- if {CONTENT_INTRO} : -->
-            <div class="lead">
-                {CONTENT_INTRO}
-            </div>
-    <!-- // if {CONTENT_INTRO} -->
+            {{#intro}}
+            <div class="lead">{{intro}}</div>
+            {{/intro}}
 
             <div class="container">
-                {CONTENT}
+                {{content}}
             </div>
 
-    <!-- if {CONTENT_NOTES} : -->
+            {{#has_notes}}
             <ul class="list-group small">
-        <!-- foreach {CONTENT_NOTES} : -->
-                <li class="list-group-item">{CONTENT_NOTE}</li>
-        <!-- // foreach {CONTENT_NOTES} -->
+                {{#notes}}
+                <li class="list-group-item">{{content}}</li>
+                {{/notes}}
             </ul>
-    <!-- // if {CONTENT_NOTES} -->
+            {{/has_notes}}
 
-    <!-- if not last content : -->
+            {{#show_hr}}
             <hr class="clearfix">
-    <!-- else : -->
+            {{/show_hr}}
+            {{^show_hr}}
             <div class="clearfix"></div>
-    <!-- // if not last content -->
+            {{/show_hr}}
 
-<!-- // foreach {CONTENT_COLLECTION} -->
+        {{/page.contents}}
         </div>
 
     </div>
@@ -130,10 +131,10 @@ body {
         <div class="container">
             <div class="cleafix">
                 <p class="text-muted small">
-                    {PAGE_FOOTER}
-<!-- modal box tester (to be deleted) : -->
-                    &nbsp;{<a href=#" data-toggle="modal" data-target="#page-modal-box">modal box test</a>}
-<!-- // modal box tester -->
+                    {{page.page_footer}}
+                {{#page.modalbox_link}}
+                    &nbsp;<a href="#" data-toggle="modal" data-target="#page-modal-box">{{page.modalbox_link}}</a>
+                {{/page.modalbox_link}}
                 </p>
             </div>
             <hr>
@@ -146,41 +147,38 @@ body {
             </div>
             <div class="pull-right text-right">
                 <p class="text-muted small">
-                    <a href="http://aboutmde.org">aboutmde.org</a>
+                    <a href="{{& website.home}}">{{website.shortname}}</a>
                     &nbsp;-&nbsp;
-                    <a href="&#x6d;&#97;&#105;&#x6c;&#x74;&#111;:&#x63;&#111;&#110;&#x74;&#x61;&#99;t&#x40;&#97;&#98;&#x6f;&#x75;&#116;&#109;&#x64;&#x65;&#46;&#x6f;&#x72;&#103;">contact [at] aboutmde [dot] org</a>
+                    <a href="#" id="website-mailto"></a>
                     <br class="hidden-xs hidden-sm">
-                    Original sources are available at <a href="http://github.com/markdown-extended">github.com/markdown-extended</a>.
+                    Original sources are available at <a href="{{& website.sources}}">{{website.sources}}</a>.
                 </p>
             </div>
         </div>
     </footer>
 
-<!-- if {MODALBOX_CONTENT} : -->
-    <!--
-        To open the modal box, use: <a ... data-toggle="modal" data-target="#page-modal-box">open modal box</a>
-    -->
-    <div class="modal fade" id="page-modal-box" tabindex="-1" role="dialog" aria-labelledby="{MODALBOX_LABEL}" aria-describedby="{MODALBOX_DESCRIPTION}" aria-hidden="true">
+    {{#page.modalbox}}
+    <div class="modal fade" id="page-modal-box" tabindex="-1" role="dialog" aria-labelledby="{{label}}" aria-describedby="{{description}}" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-    <!-- if {MODALBOX_TITLE} : -->
-                <div class="modal-header">
+       {{#title}}
+             <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="{MODALBOX_LABEL}">{MODALBOX_TITLE}</h4>
+                    <h4 class="modal-title" id="{{label}}">{{title}}</h4>
                 </div>
-    <!-- // if {MODALBOX_TITLE} -->
+        {{/title}}
                 <div class="modal-body">
-                    {MODALBOX_CONTENT}
+                    {{content}}
                 </div>
-    <!-- if {MODALBOX_FOOTER} : -->
+       {{#footer}}
                 <div class="modal-footer">
-                    {MODALBOX_FOOTER}
+                    {{footer}}
                 </div>
-    <!-- // if {MODALBOX_FOOTER} -->
+       {{/footer}}
             </div>
         </div>
     </div>
-<!-- // if {MODALBOX_CONTENT} -->
+    {{/page.modalbox}}
 
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
     <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
@@ -199,16 +197,10 @@ body {
     new WOW().init();
 
     $(function() {
-    
-        // load implementations dropdown menu
-        $.get('json_data/implementations.json', function(data){
-            $.each(data, function(ind, val){
-                $('ul#implementations-list').prepend(
-                    '<li><a href="'+val.homepage+'" title="'+val.description+'">'+ind+'</a></li>'
-                );
-            }); 
-        }, 'json');
-
+        var website_email = '{{website.contact}}';
+        $('#website-mailto')
+            .attr('href', website_email)
+            .html(website_email);
     });
     </script>
 </body>

@@ -1,0 +1,22 @@
+{
+  "name": "aboutmde.org",
+  "version": "1.0.0",
+  "description": "Mustache/Grunt template for aboutmde.org pages",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/markdown-extended/page-model.git"
+  },
+  "license": "CC BY-NC-SA 4.0",
+  "homepage": "https://github.com/markdown-extended/page-model",
+  "main": "Gruntfile.js",
+  "dependencies": {
+    "bower": "^1.3.12",
+    "grunt": "^0.4.5",
+    "grunt-merge-data": "^0.4.4",
+    "grunt-mustache-render": "^1.7.0"
+  },
+  "scripts": {
+    "postinstall" : "node_modules/.bin/bower install",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}

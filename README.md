@@ -5,13 +5,25 @@ Page model for aboutmde.org
 The aboutmde.org galaxy
 -----------------------
 
--   <http://aboutmde.org> (landing-page)
--   <http://api.aboutmde.org>
--   <http://dingus.aboutmde.org>
--   <http://reminders.aboutmde.org>
--   <http://manifest.aboutmde.org>
+-   <http://aboutmde.org> (landing-page) : www/landing/
+-   <http://api.aboutmde.org> : www/api/
+-   <http://dingus.aboutmde.org> : www/dingus/
+-   <http://reminders.aboutmde.org> : www/reminders/
+-   <http://manifest.aboutmde.org> : www/manifest/
+-   <http://test-suite.aboutmde.org> : www/test-suite/
+-   <http://keys.aboutmde.org> : www/keys/
 
-GPG key: <http://aboutmde.org/keys/aboutmde-pubkey.asc>
+GPG key: <http://keys.aboutmde.org/aboutmde-pubkey.asc>
+
+For the website draft: <http://preview.aboutmde.org>
+
+The NPM plugins
+---------------
+
+-   <http://gruntjs.com/>
+-   <https://www.npmjs.com/package/grunt-mustache-render>
+-   <https://github.com/janl/mustache.js/>
+-   <https://github.com/shinnn/grunt-merge-data>
 
 The external libraries used fo this template
 --------------------------------------------
@@ -24,32 +36,17 @@ The external libraries used fo this template
 Usage of the model
 ------------------
 
-Global tags to update in this model:
+Fill in the `data/page.yml` configuration file for your page (will be generated as `www/index.html`)
+and run:
 
-    {META_TITLE}
-    {META_DESCRIPTION}
-    {PAGE_TITLE}            // on the basic model: **Markdown** _extended_ (**<strong>MDE</strong>** _<em>dingus</em>_)
-    {PAGE_DESCRIPTION}
-    {PAGE_FOOTER}
-    {PAGE_ACTIVE}           // to show which page is active in the navbar
+    $ grunt
+    # or
+    $ grunt --debug --verbose
 
-Contents collection organization:
+Classic `.devtools`
+-------------------
 
-    {CONTENT_TITLE} 
-    {CONTENT_DESCRIPTION} 
-    {CONTENT_INTRO}
-    {CONTENT}
-    {CONTENT_NOTES}
-
-A modal box is embedded, with tags:
-
-    {MODALBOX_LABEL}
-    {MODALBOX_DESCRIPTION}
-    {MODALBOX_TITLE}
-    {MODALBOX_CONTENT}
-    {MODALBOX_FOOTER}
-    
-TODOS
------
-
--   make (or search) a visible "brand icon" from markdown-mark
+    DEFAULT_SYNC_METHOD="ftp"
+    DEFAULT_SYNC_SERVER="-f .devtools.ftp.conf www/{SUBDIR}"
+    DEFAULT_SYNC_FTP_EXCLUDED_FILES=( '.git*' .devtools* )
+    DEFAULT_SYNC_FTP_EXCLUDED_DIRS=( '.git/*' 'bin/*' '*/.git/*' )

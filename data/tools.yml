@@ -1,0 +1,7 @@
+- name:         test-suite
+  description:  "Test-suite for MDE specifications implementations"
+  link:         http://github.com/markdown-extended/test-suite
+
+- name:         vim-mde-syntax
+  description:  "Syntax highlighting for Markdown Extended files in VIM"
+  link:         http://github.com/markdown-extended/vim-mde-syntax
