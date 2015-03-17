@@ -12,12 +12,17 @@ page_footer:        "{PAGE_FOOTER}"
 page_active:        "{PAGE_SLUG}"
 
 contents:
+# a raw content
 - title:        "{CONTENT_TITLE}"
   description:  "{CONTENT_DESCRIPTION}"
   intro:        "{CONTENT_INTRO}"
   content:              "{CONTENT}"
   notes:
   - content:            "{CONTENT_NOTE_1}"
+# a markdown file content
+- title:        "{MD_CONTENT_TITLE}"
+  description:  "{MD_CONTENT_DESCRIPTION}"
+  markdown:     Test
 
 modalbox_link:      "{MODALBOX_LINK}"
 modalbox:

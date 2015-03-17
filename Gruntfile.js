@@ -1,5 +1,18 @@
 module.exports = function(grunt) {
     grunt.initConfig({
+        markdown: {
+            all: {
+                options: {
+                    template: './templates/md-template.html'
+                },
+                files: [{
+                    expand: true,
+                    src: 'pages/*.md',
+                    dest: 'var/',
+                    ext: '.html'
+                }]
+            }
+        },
         merge_data: {
             options: {
                 data: function (data) {
@@ -21,11 +34,18 @@ module.exports = function(grunt) {
                     // organize contents
                     if (data.page.contents != undefined) {
                         for (var j=0; j<data.page.contents.length; j++) {
+                            // markdown content
+                            if (data.page.contents[j].markdown != undefined) {
+                                var filename = data.page.contents[j].markdown,
+                                    mdfile = './var/pages/'+filename.replace('.html', '')+'.html';
+                                data.page.contents[j].content = grunt.file.read(mdfile);
+                            } else {
+                                if (data.page.contents[j].notes && data.page.contents[j].notes.length>0) {
+                                    data.page.contents[j].has_notes = true;
+                                }
+                            }
                             if (j<(data.page.contents.length-1)) {
                                 data.page.contents[j].show_hr = true;
-                            }
-                            if (data.page.contents[j].notes && data.page.contents[j].notes.length>0) {
-                                data.page.contents[j].has_notes = true;
                             }
                         }
                     }
@@ -34,7 +54,7 @@ module.exports = function(grunt) {
             },
             all: {
                 src: ['./data/*.yml'],
-                dest: './www/config.json'
+                dest: './var/config.json'
             }
         },
         mustache_render: {
@@ -45,14 +65,15 @@ module.exports = function(grunt) {
             },
             all: {
                 files : [{
-                    data:     './www/config.json',
+                    data:     './var/config.json',
                     template: './templates/page-model.mustache',
                     dest:     './www/index.html'
                 }]
             }
         }
     });
+    grunt.loadNpmTasks('grunt-markdown');
     grunt.loadNpmTasks('grunt-merge-data');
     grunt.loadNpmTasks('grunt-mustache-render');
-    grunt.registerTask('default', ['merge_data', 'mustache_render']);
+    grunt.registerTask('default', ['markdown','merge_data','mustache_render']);
 };

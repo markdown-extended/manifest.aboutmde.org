@@ -12,3 +12,6 @@ node_modules/
 # for the main repo only
 www/index.html
 www/config.json
+
+# hack
+!.gitkeep
