@@ -5,19 +5,21 @@ Page model for aboutmde.org
 The aboutmde.org galaxy
 -----------------------
 
--   <http://aboutmde.org>
+-   <http://aboutmde.org> (landing-page)
 -   <http://api.aboutmde.org>
 -   <http://dingus.aboutmde.org>
 -   <http://reminders.aboutmde.org>
 -   <http://manifest.aboutmde.org>
 
+GPG key: <http://aboutmde.org/keys/aboutmde-pubkey.asc>
+
 The external libraries used fo this template
 --------------------------------------------
 
--   <http://jquery.com>
+-   <http://jquery.com> (manual: <http://api.jquery.com/>)
 -   <http://getbootstrap.com>
--   <http://fortawesome.github.io/Font-Awesome/>
--   <http://mynameismatthieu.com/WOW/>
+-   <http://fortawesome.github.io/Font-Awesome/> (icons list: <http://fortawesome.github.io/Font-Awesome/icons/>)
+-   <http://mynameismatthieu.com/WOW/> (animations: <https://github.com/daneden/animate.css>)
 
 Usage of the model
 ------------------
@@ -50,5 +52,4 @@ A modal box is embedded, with tags:
 TODOS
 -----
 
--   add a description to implementation links
 -   make (or search) a visible "brand icon" from markdown-mark

@@ -46,7 +46,7 @@ body {
                     <span class="sr-only">Toggle navigation</span>
                     <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="http://aboutmde.org"><img alt="[M↓]" src="bower_components/markdown-mark/39x24-solid.png"></a>
+                <a class="navbar-brand" href="http://aboutmde.org" title="**Markdown** _extended_ - aboutmde.org">MDE</a>
             </div>
             <div class="collapse navbar-collapse" id="page-navbar">
 <!--
@@ -62,13 +62,13 @@ body {
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Implementations <span class="caret"></span></a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a href="http://github.com/piwi/markdown-extended" title="">PHP Markdown Extended</a></li>
+                        <ul class="dropdown-menu" role="menu" id="implementations-list">
                             <li class="divider"></li>
-                            <li><a href="http://github.com/markdown-extended/vim-mde-syntax" title="">VIM syntax highlight</a></li>
+                            <li role="presentation" class="dropdown-header">Want to build your own?</li>
+                            <li><a href="http://github.com/markdown-extended/test-suite" title="A complete specifications test suite">MDE test suite</a></li>
                         </ul>
                     </li>
-                    <li class="active">
+                    <li>
                         <a href="http://github.com/markdown-extended" title="github.com/markdown-extended"><i class="fa fa-github"></i></a>
                     </li>
                 </ul>
@@ -197,6 +197,19 @@ body {
     }
 
     new WOW().init();
+
+    $(function() {
+    
+        // load implementations dropdown menu
+        $.get('json_data/implementations.json', function(data){
+            $.each(data, function(ind, val){
+                $('ul#implementations-list').prepend(
+                    '<li><a href="'+val.homepage+'" title="'+val.description+'">'+ind+'</a></li>'
+                );
+            }); 
+        }, 'json');
+
+    });
     </script>
 </body>
 </html>

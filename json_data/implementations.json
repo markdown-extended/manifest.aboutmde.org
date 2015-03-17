@@ -1,0 +1,10 @@
+{
+    "PHP Markdown Extended": {
+        "description": "A PHP parser for the Markdown Extended syntax",
+        "homepage": "http://github.com/piwi/markdown-extended"
+    },
+    "VIM syntax highlight": {
+        "description": "Syntax highlighting for Markdown Extended files in VIM",
+        "homepage": "http://github.com/markdown-extended/vim-mde-syntax"
+    }
+}
