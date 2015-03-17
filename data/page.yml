@@ -2,7 +2,7 @@ meta_title:         "{META_TITLE}"
 meta_description:   "{META_DESCRIPTION}"
 
 # on the basic model: **Markdown** _extended_ (**<strong>MDE</strong>** _<em>dingus</em>_)
-page_title:         "{PAGE_TITLE}"
+page_title:         "{**PAGE** _<em>TITLE</em>_}"
 page_link:          "{PAGE_LINK}"
 page_description:   "{PAGE_DESCRIPTION}"
 page_footer:        "{PAGE_FOOTER}"
@@ -22,7 +22,7 @@ contents:
 # a markdown file content
 - title:        "{MD_CONTENT_TITLE}"
   description:  "{MD_CONTENT_DESCRIPTION}"
-  markdown:     Test
+  markdown:     page-test
 
 modalbox_link:      "{MODALBOX_LINK}"
 modalbox:
