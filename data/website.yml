@@ -25,7 +25,6 @@ menu:
         title: Syntax reminders
 
 piwik:
-    active: true
     server: stats.ateliers-pierrot.fr
     idSite: 14
 
