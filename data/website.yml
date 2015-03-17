@@ -9,7 +9,7 @@ logo:           vendor/markdown-mark/66x40-solid.png
 
 menu:
     -   slug: home
-        url: "http://aboutmde.org"
+        url: "http://home.aboutmde.org"
         title: Home
     -   slug: manifest
         url: "http://manifest.aboutmde.org"
