@@ -21,8 +21,8 @@ menu:
         url: "http://api.aboutmde.org"
         title: Online API
     -   slug: reminders
-        url: "http://reminders.aboutmde.org"
-        title: Syntax reminders
+        url: "http://cheatsheet.aboutmde.org"
+        title: Syntax cheat-sheet
 
 piwik:
     server: stats.ateliers-pierrot.fr
