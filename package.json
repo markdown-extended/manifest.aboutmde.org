@@ -2,12 +2,12 @@
   "name": "aboutmde.org",
   "version": "1.0.0",
   "description": "Mustache/Grunt template for aboutmde.org pages",
+  "license": "CC BY-NC-SA 4.0",
+  "homepage": "http://github.com/markdown-extended",
   "repository": {
     "type": "git",
     "url": "https://github.com/markdown-extended/page-model.git"
   },
-  "license": "CC BY-NC-SA 4.0",
-  "homepage": "https://github.com/markdown-extended/page-model",
   "main": "Gruntfile.js",
   "dependencies": {
     "bower": "^1.3.12",

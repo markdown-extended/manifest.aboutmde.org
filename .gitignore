@@ -1,13 +1,10 @@
 # for all forks
+node_modules/*
 composer.lock
 vendor/*
 */vendor/*
-tmp/*
-*/tmp/*
 var/*
 */var/*
-www/bower_components/
-node_modules/
 
 # for the main repo only
 www/index.html

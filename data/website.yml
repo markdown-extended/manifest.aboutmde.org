@@ -5,7 +5,7 @@ home:           http://aboutmde.org/
 sources:        http://github.com/markdown-extended
 author:         About MDE & contributors
 contact:        info@aboutmde.org
-logo:           bower_components/markdown-mark/66x40-solid.png
+logo:           vendor/markdown-mark/66x40-solid.png
 menu:
     -   slug: home
         url: "http://aboutmde.org"

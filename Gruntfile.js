@@ -1,15 +1,36 @@
+
+// global app config
+var PAGE_MODEL = {
+    // app paths
+    data_dir:       './data/',
+    pages_dir:      './pages/',
+    templates_dir:  './templates/',
+    tmp_dir:        './var/',
+    www_dir:        './www/',
+    // files
+    template:       './templates/page-model.mustache',
+    md_template:    './templates/md-template.html',
+    data_target:    './var/config.json',
+    web_target:     './www/index.html',
+    // files masks
+    html_ext:       '.html',
+    pages_src:      './pages/*.md',
+    data_src:       './data/*.yml'
+};
+
+// grunt compilation
 module.exports = function(grunt) {
     grunt.initConfig({
         markdown: {
             all: {
                 options: {
-                    template: './templates/md-template.html'
+                    template: PAGE_MODEL.md_template
                 },
                 files: [{
                     expand: true,
-                    src: 'pages/*.md',
-                    dest: 'var/',
-                    ext: '.html'
+                    src:    PAGE_MODEL.pages_src,
+                    dest:   PAGE_MODEL.tmp_dir,
+                    ext:    PAGE_MODEL.html_ext
                 }]
             }
         },
@@ -37,7 +58,7 @@ module.exports = function(grunt) {
                             // markdown content
                             if (data.page.contents[j].markdown != undefined) {
                                 var filename = data.page.contents[j].markdown,
-                                    mdfile = './var/pages/'+filename.replace('.html', '')+'.html';
+                                    mdfile = PAGE_MODEL.tmp_dir + 'pages/' + filename.replace(PAGE_MODEL.html_ext, '') + PAGE_MODEL.html_ext;
                                 data.page.contents[j].content = grunt.file.read(mdfile);
                             } else {
                                 if (data.page.contents[j].notes && data.page.contents[j].notes.length>0) {
@@ -53,21 +74,21 @@ module.exports = function(grunt) {
                 }
             },
             all: {
-                src: ['./data/*.yml'],
-                dest: './var/config.json'
+                src:    PAGE_MODEL.data_src,
+                dest:   PAGE_MODEL.data_target
             }
         },
         mustache_render: {
             options: {
-                clear_cache: true,
-                escape: false,
-                directory: "./templates/"
+                clear_cache:    true,
+                escape:         false,
+                directory:      PAGE_MODEL.templates_dir
             },
             all: {
                 files : [{
-                    data:     './var/config.json',
-                    template: './templates/page-model.mustache',
-                    dest:     './www/index.html'
+                    template: PAGE_MODEL.template,
+                    data:     PAGE_MODEL.data_target,
+                    dest:     PAGE_MODEL.web_target
                 }]
             }
         }
