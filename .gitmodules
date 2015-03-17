@@ -1,0 +1,3 @@
+[submodule "git_modules/manifest"]
+	path = git_modules/manifest
+	url = https://github.com/markdown-extended/manifest.git

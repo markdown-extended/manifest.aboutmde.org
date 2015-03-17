@@ -1,33 +1,17 @@
-meta_title:         "{META_TITLE}"
-meta_description:   "{META_DESCRIPTION}"
+meta_title:         "Manifest"
+meta_description:   "The Markdown Extended specifications "
 
 # on the basic model: **Markdown** _extended_ (**<strong>MDE</strong>** _<em>dingus</em>_)
-page_title:         "{PAGE_TITLE}"
-page_link:          "{PAGE_LINK}"
-page_description:   "{PAGE_DESCRIPTION}"
-page_footer:        "{PAGE_FOOTER}"
+page_title:         "**MDE** _manifest_"
+page_link:          "http://manifest.aboutmde.org/"
+page_description:   "the markdown extended specs"
+page_footer:        |
+                You can find the sources of the manifest online at <a href="http://github.com/markdown-extended/manifest" title="See online http://github.com/markdown-extended/manifest">http://github.com/markdown-extended/manifest</a>.
+
 # use this to change default website.logo
 #page_logo:          ...
 # to show which page is active in the navbar, use the "slug" entry of website.menu
-page_active:        "{PAGE_SLUG}"
+page_active:        manifest
 
 contents:
-# a raw content
-- title:        "{CONTENT_TITLE}"
-  description:  "{CONTENT_DESCRIPTION}"
-  intro:        "{CONTENT_INTRO}"
-  content:              "{CONTENT}"
-  notes:
-  - content:            "{CONTENT_NOTE_1}"
-# a markdown file content
-- title:        "{MD_CONTENT_TITLE}"
-  description:  "{MD_CONTENT_DESCRIPTION}"
-  markdown:     Test
-
-modalbox_link:      "{MODALBOX_LINK}"
-modalbox:
-  label:            "{MODALBOX_LABEL}"
-  description:      "{MODALBOX_DESCRIPTION}"
-  title:            "{MODALBOX_TITLE}"
-  content:          "{MODALBOX_CONTENT}"
-  footer:           "{MODALBOX_FOOTER}"
+- markdown:     mde-manifest
