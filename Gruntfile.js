@@ -19,12 +19,14 @@ module.exports = function(grunt) {
                         }
                     }
                     // organize contents
-                    for (var j=0; j<data.page.contents.length; j++) {
-                        if (j<(data.page.contents.length-1)) {
-                            data.page.contents[j].show_hr = true;
-                        }
-                        if (data.page.contents[j].notes && data.page.contents[j].notes.length>0) {
-                            data.page.contents[j].has_notes = true;
+                    if (data.page.contents != undefined) {
+                        for (var j=0; j<data.page.contents.length; j++) {
+                            if (j<(data.page.contents.length-1)) {
+                                data.page.contents[j].show_hr = true;
+                            }
+                            if (data.page.contents[j].notes && data.page.contents[j].notes.length>0) {
+                                data.page.contents[j].has_notes = true;
+                            }
                         }
                     }
                     return data;
@@ -38,6 +40,7 @@ module.exports = function(grunt) {
         mustache_render: {
             options: {
                 clear_cache: true,
+                escape: false,
                 directory: "./templates/"
             },
             all: {

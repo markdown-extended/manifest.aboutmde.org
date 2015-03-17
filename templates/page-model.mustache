@@ -3,37 +3,12 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <title>{{page.meta_title}} &bull; {{website.shortname}}</title>
     <meta name="description" content="{{page.meta_description}}">
     <link rel="icon" type="image/png" href="32x32-solid.png" sizes="32x32">
-    <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="bower_components/fontawesome/css/font-awesome.min.css" rel="stylesheet">
-    <link href="bower_components/wow/css/libs/animate.css" rel="stylesheet">
-<style>
-html {
-    position: relative;
-    min-height: 100%;
-}
-body {
-    margin-bottom: 170px;
-}
-.footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 160px;
-    background-color: #f5f5f5;
-    padding-top: 20px;
-}
-.navbar { margin-bottom: 0; }
-@media screen and (max-width: 767px) {
-    body    { margin-bottom: 300px; }
-    .footer { height: 290px; }
-    .footer .pull-left, .footer .pull-right { float: none; }
-    .footer .text-left, .footer .text-right { text-align: center; }
-}
-</style>
+
+    {{> page-styles}}
+
 </head>
 <body>
     <a href="#page-content" class="sr-only sr-only-focusable">Skip to main content</a>
@@ -46,12 +21,12 @@ body {
                     <span class="sr-only">Toggle navigation</span>
                     <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="{{& website.home}}" title="{{website.presentation}}">{{website.name}}</a>
+                <a class="navbar-brand" href="{{website.home}}" title="{{website.presentation}}">{{website.name}}</a>
             </div>
             <div class="collapse navbar-collapse" id="page-navbar">
                 <ul class="nav navbar-nav">
                 {{#website.menu}}
-                    <li class="{{#is_active}}active{{/is_active}}"><a href="{{& url}}">{{title}}{{#is_active}} <span class="sr-only">(current)</span>{{/is_active}}</a></li>
+                    <li class="{{#is_active}}active{{/is_active}}"><a href="{{url}}">{{title}}{{#is_active}} <span class="sr-only">(current)</span>{{/is_active}}</a></li>
                 {{/website.menu}}
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
@@ -59,7 +34,7 @@ body {
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Tools <span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu" id="tools-list">
                         {{#tools}}
-                            <li><a href="{{& link}}" title="{{description}}">{{name}}</a></li>
+                            <li><a href="{{link}}" title="{{description}}">{{name}}</a></li>
                         {{/tools}}
                         </ul>
                     </li>
@@ -67,12 +42,12 @@ body {
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Implementations <span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu" id="implementations-list">
                         {{#implementations}}
-                            <li><a href="{{& link}}" title="{{description}}">{{name}}</a></li>
+                            <li><a href="{{link}}" title="{{description}}">{{name}}</a></li>
                         {{/implementations}}
                         </ul>
                     </li>
                     <li>
-                        <a href="{{& website.sources}}" title="{{website.sources}}"><i class="fa fa-github"></i></a>
+                        <a href="{{website.sources}}" title="{{website.sources}}"><i class="fa fa-github"></i></a>
                     </li>
                 </ul>
             </div>
@@ -105,11 +80,11 @@ body {
             </div>
             <div class="pull-right text-right">
                 <p class="text-muted small">
-                    <a href="{{& website.home}}">{{website.shortname}}</a>
+                    <a href="{{website.home}}">{{website.shortname}}</a>
                     &nbsp;-&nbsp;
                     <a href="#" id="website-mailto"></a>
                     <br class="hidden-xs hidden-sm">
-                    Original sources are available at <a href="{{& website.sources}}">{{website.sources}}</a>.
+                    Original sources are available at <a href="{{website.sources}}">{{website.sources}}</a>.
                 </p>
             </div>
         </div>
@@ -121,7 +96,7 @@ body {
             <div class="modal-content">
        {{#title}}
              <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="close"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title" id="{{label}}">{{title}}</h4>
                 </div>
         {{/title}}
@@ -138,28 +113,7 @@ body {
     </div>
     {{/page.modalbox}}
 
-    <script src="bower_components/jquery/dist/jquery.min.js"></script>
-    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="bower_components/wow/dist/wow.min.js"></script>
-    <script>
-    var mdereminders_window; // use this variable to interact with the cheat sheet window
-    function mdereminders_popup(url){
-        if (!url) url='http://reminders.aboutmde.org/index.html?popup';
-        if (url.lastIndexOf("popup")==-1) url += (url.lastIndexOf("?")!=-1) ? '&popup' : '?popup';
-        mdereminders_window = window.open(url, 'markdown_reminders',
-            'directories=0,menubar=0,status=0,location=0,scrollbars=1,resizable=1,fullscreen=0,width=840,height=380,left=120,top=120');
-        mdereminders_window.focus();
-        return false;
-    }
+    {{> page-scripts}}
 
-    new WOW().init();
-
-    $(function() {
-        var website_email = '{{website.contact}}';
-        $('#website-mailto')
-            .attr('href', website_email)
-            .html(website_email);
-    });
-    </script>
 </body>
 </html>

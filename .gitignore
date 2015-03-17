@@ -10,6 +10,6 @@ var/*
 www/bower_components/
 node_modules/
 
-# for this main repo only
+# for the main repo only
 www/index.html
 www/config.json
