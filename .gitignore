@@ -1,5 +1,4 @@
 # for all forks
-.devtools*
 composer.lock
 vendor/*
 */vendor/*

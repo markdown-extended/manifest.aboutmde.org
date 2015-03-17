@@ -2,20 +2,29 @@ Page model for aboutmde.org
 ===========================
 
 
-The aboutmde.org galaxy
------------------------
+Usage of the model
+------------------
 
--   <http://aboutmde.org> (landing-page) : www/landing/
--   <http://api.aboutmde.org> : www/api/
--   <http://dingus.aboutmde.org> : www/dingus/
--   <http://reminders.aboutmde.org> : www/reminders/
--   <http://manifest.aboutmde.org> : www/manifest/
--   <http://test-suite.aboutmde.org> : www/test-suite/
--   <http://keys.aboutmde.org> : www/keys/
+First setup your clone to "fork" the original <http://github.com/markdown-extended/page-model>:
 
-GPG key: <http://keys.aboutmde.org/aboutmde-pubkey.asc>
+    $ git remote add upstream http://github.com/markdown-extended/page-model.git
+    $ git remote update
+    $ git pull upstream master
 
-For the website draft: <http://preview.aboutmde.org>
+Then you can update the following files to customize the page:
+
+    data/page.yml
+    templates/page-content.mustache
+    templates/page-styles.mustache
+    templates/page-scripts.mustache
+
+Then run Grunt:
+
+    $ grunt
+    # or
+    $ grunt --debug --verbose
+
+The page is finally generated as `www/index.html`.
 
 The NPM plugins
 ---------------
@@ -32,16 +41,6 @@ The external libraries used fo this template
 -   <http://getbootstrap.com>
 -   <http://fortawesome.github.io/Font-Awesome/> (icons list: <http://fortawesome.github.io/Font-Awesome/icons/>)
 -   <http://mynameismatthieu.com/WOW/> (animations: <https://github.com/daneden/animate.css>)
-
-Usage of the model
-------------------
-
-Fill in the `data/page.yml` configuration file for your page (will be generated as `www/index.html`)
-and run:
-
-    $ grunt
-    # or
-    $ grunt --debug --verbose
 
 Classic `.devtools`
 -------------------
