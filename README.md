@@ -26,6 +26,10 @@ Then run Grunt:
 
 The page is finally generated as `www/index.html`.
 
+To auto-synchronize website with DevTools, you MUST update the `.devtools` config file:
+
+    DEFAULT_SYNC_SERVER="-f ../.devtools.ftp.conf www/{SUBDIR}"
+
 The NPM plugins
 ---------------
 
