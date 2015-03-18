@@ -40,6 +40,23 @@ you MUST update the `.devtools` config file:
 
     DEFAULT_SYNC_SERVER="-f ../aboutmde-ftp.conf www/{SUBDIR}"
 
+The following files or directories are finally IGNORED when syncrhonizing on the server:
+
+    .git*
+    */.git/*
+    .devtools*
+    Gruntfile.js 
+    README.md
+    bin/*
+    node_modules/*
+    pages/*
+    data/*
+    templates/*
+    var/*
+
+The `var/` directory MUST only be used on pre-processing. A `tmp/` or `www/tmp/` can be
+used for web processing.
+
 
 Dependencies
 ------------

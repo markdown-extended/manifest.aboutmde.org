@@ -1,27 +1,85 @@
 
 // global app config
-var GLOBAL_GRUNT,
-    PAGE_MODEL = {
-    // app paths
-    data_dir:       './data/',
-    pages_dir:      './pages/',
-    templates_dir:  './templates/',
-    tmp_dir:        './var/',
-    www_dir:        './www/',
-    // files
-    template:       './templates/page-model.mustache',
-    md_template:    './templates/md-template.html',
-    data_target:    './var/config.json',
-    web_target:     './www/index.html',
-    // files masks
-    html_ext:       '.html',
-    pages_src:      './pages/*.md',
-    data_src:       './data/*.yml'
-};
+var _GRUNT, _ENV,
+    _APP = {
+
+        // app paths
+        data_dir:               './data/',
+        pages_dir:              './pages/',
+        templates_dir:          './templates/',
+        tmp_dir:                './var/',
+        www_dir:                './www/',
+
+        // files masks
+        html_ext:               '.html',
+        pages_src_all:          './pages/*.md',
+        data_src_all:           './data/*.yml',
+
+        // mde contents
+        md_template:            './templates/md-template.html',
+
+        // templates(s)
+        template_page:          './templates/page-template.mustache',
+        template_meta_page:     './templates/meta-page-template.mustache',
+        template_htaccess:      './templates/htaccess.mustache',
+
+        // .htaccess
+        web_htaccess:           './www/.htaccess',
+        data_htaccess:          './var/config-htaccess.json',
+
+        // index page
+        web_index:              './www/index.html',
+        data_index:             './var/config-index.json',
+        data_src_index:         './pages/page.yml',
+
+        // 404 meta page
+        web_404:                './www/404.html',
+        data_404:               './var/config-404.json',
+        data_src_404:           './pages/404/page.yml',
+
+        // maintenance meta page
+        web_maintenance:        './www/maintenance.html',
+        data_maintenance:       './var/config-maintenance.json',
+        data_src_maintenance:   './pages/maintenance/page.yml',
+
+        // tasks options
+        markdown_options: function(){
+            return {
+                template:       this.md_template,
+                htmlExtension:  this.html_ext
+            };
+        },
+        merge_data_options: function(){
+            return {
+                data:           function(data){ return transformData(data); }
+            };
+        },
+        mustache_render_options: function(){
+            return {
+                clear_cache:    true,
+                directory:      this.templates_dir
+            };
+        },
+
+        // environment
+        env_prod: {
+            base_path:  '/'
+        },
+        env_dev: {
+            base_path:  '/GitHub_projects/markdown-extended/page-model/www/'
+        }
+    };
 
 // custom data transformation
 var transformData = function (data)
 {
+    // current env info
+    data.is_dev = (_ENV===true);
+    data.env    = (_ENV=='dev' ? _APP.env_dev : _APP.env_prod);
+
+    if (data.page==undefined) {
+        return data;
+    }
 
     // current page
     if (data.page.page_logo == undefined) {
@@ -47,8 +105,8 @@ var transformData = function (data)
             // markdown content
             if (data.page.contents[j].markdown != undefined) {
                 var filename = data.page.contents[j].markdown,
-                    mdfile = PAGE_MODEL.tmp_dir + 'pages/' + filename.replace(PAGE_MODEL.html_ext, '') + PAGE_MODEL.html_ext;
-                data.page.contents[j].content = GLOBAL_GRUNT.file.read(mdfile);
+                    mdfile = _APP.tmp_dir + 'pages/' + filename.replace(_APP.html_ext, '') + _APP.html_ext;
+                data.page.contents[j].content = _GRUNT.file.read(mdfile);
             } else {
                 if (data.page.contents[j].notes && data.page.contents[j].notes.length>0) {
                     data.page.contents[j].has_notes = true;
@@ -66,46 +124,90 @@ var transformData = function (data)
 
 // grunt compilation
 module.exports = function(grunt) {
-    GLOBAL_GRUNT = grunt;
-    grunt.initConfig({
-        markdown: {
-            all: {
-                options: {
-                    template: PAGE_MODEL.md_template
-                },
-                files: [{
-                    expand: true,
-                    src:    PAGE_MODEL.pages_src,
-                    dest:   PAGE_MODEL.tmp_dir,
-                    ext:    PAGE_MODEL.html_ext
-                }]
-            }
-        },
-        merge_data: {
-            options: {
-                data:   function(data){ return transformData(data); }
-            },
-            all: {
-                src:    PAGE_MODEL.data_src,
-                dest:   PAGE_MODEL.data_target
-            }
-        },
-        mustache_render: {
-            options: {
-                clear_cache:    true,
-                directory:      PAGE_MODEL.templates_dir
-            },
-            all: {
-                files : [{
-                    template: PAGE_MODEL.template,
-                    data:     PAGE_MODEL.data_target,
-                    dest:     PAGE_MODEL.web_target
-                }]
-            }
-        }
-    });
+
+    _GRUNT = grunt;
+    _ENV = (grunt.option('dev')!==undefined) ? 'dev' : 'prod';
+
     grunt.loadNpmTasks('grunt-markdown');
     grunt.loadNpmTasks('grunt-merge-data');
     grunt.loadNpmTasks('grunt-mustache-render');
-    grunt.registerTask('default', ['markdown','merge_data','mustache_render']);
+
+    grunt.initConfig({
+
+        markdown: {
+            options:            _APP.merge_data_options(),
+            index: {
+                files: [{
+                    expand:     true,
+                    src:        _APP.pages_src_all,
+                    dest:       _APP.tmp_dir,
+                    ext:        _APP.html_ext
+                }]
+            }
+        },
+
+        merge_data: {
+            options:            _APP.merge_data_options(),
+            htaccess: {
+                src:            [ _APP.data_src_all ],
+                dest:           _APP.data_htaccess
+            },
+            index: {
+                src:            [ _APP.data_src_all , _APP.data_src_index ],
+                dest:           _APP.data_index
+            },
+            meta_404: {
+                src:            [ _APP.data_src_all , _APP.data_src_404 ],
+                dest:           _APP.data_404
+            },
+            meta_maintenance: {
+                src:            [ _APP.data_src_all , _APP.data_src_maintenance ],
+                dest:           _APP.data_maintenance
+            }
+        },
+
+        mustache_render: {
+            options:            _APP.mustache_render_options(),
+            htaccess: {
+                files : [{
+                    template:   _APP.template_htaccess,
+                    data:       _APP.data_htaccess,
+                    dest:       _APP.web_htaccess
+                }]
+            },
+            index: {
+                files : [{
+                    template:   _APP.template_page,
+                    data:       _APP.data_index,
+                    dest:       _APP.web_index
+                }]
+            },
+            meta_404: {
+                files : [{
+                    template:   _APP.template_meta_page,
+                    data:       _APP.data_404,
+                    dest:       _APP.web_404
+                }]
+            },
+            meta_maintenance: {
+                files : [{
+                    template:   _APP.template_meta_page,
+                    data:       _APP.data_maintenance,
+                    dest:       _APP.web_maintenance
+                }]
+            }
+        }
+
+    });
+
+    grunt.registerTask('htaccess',      ['merge_data:htaccess','mustache_render:htaccess']);
+    grunt.registerTask('index',         ['markdown:index','merge_data:index','mustache_render:index']);
+    grunt.registerTask('404',           ['merge_data:meta_404','mustache_render:meta_404']);
+    grunt.registerTask('maintenance',   ['merge_data:meta_maintenance','mustache_render:meta_maintenance']);
+    grunt.registerTask('default',       ['htaccess','index','404','maintenance']);
+
+    grunt.registerTask('test', 'a simple test space ...', function() {
+        _GRUNT.log.write('todo');
+    });
+
 };

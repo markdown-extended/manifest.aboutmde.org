@@ -1,5 +1,6 @@
 meta_title:         "{META_TITLE}"
 meta_description:   "{META_DESCRIPTION}"
+#meta_robots:        none
 
 # on the basic model: **Markdown** _extended_ (**<strong>MDE</strong>** _<em>dingus</em>_)
 page_title:         "{**PAGE** _<em>TITLE</em>_}"
