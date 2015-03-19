@@ -105,6 +105,7 @@ options:  --dev             : load the 'dev' environment settings \n\
           --root            : use this for 'root.aboutmde.org' \n\
           --maintenance     : use this to enable the 'maintenance' mode \n\
 \n\
+Use '--opt1=1 --opt2=1' for multiple flag options.\n\
 All logic is stored in the 'Gruntfile.js'. \n\
 The special 'test' and 'debug' tasks can be used during development. \n\
 ### \n\
@@ -173,6 +174,7 @@ module.exports = function(grunt) {
     var opt;
     for (var index in _APP.default_options) {
         opt = grunt.option(index);
+        if (opt && opt==1) opt = true;
         _FLAGS[index] = opt || _APP.default_options[index];
     }
     // env flag
