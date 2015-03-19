@@ -78,7 +78,7 @@ var _GRUNT,
         getEnvConfigPath:       function() {
             // user environment ?
             var envfile     = this.env_dir + _ENV + '/' + this.data_env,
-                userenvfile = _APP.user_env;
+                userenvfile = this.user_env;
             if (_ENV=='dev' && _GRUNT.file.exists(userenvfile)) {
                 return userenvfile;
             } else {
