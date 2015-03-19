@@ -29,10 +29,19 @@ RewriteRule ^(.*/)?\.(.*)/ - [F]
 RewriteCond %{HTTP_HOST} ^www\.aboutmde\.org [NC]
 RewriteRule ^(.*)$ http://aboutmde.org/$1 [R=301,L]
 
-# maintenance
+# MAINTENANCE SECTION
+{{#is_maintenance}}
+# MAINTENANCE ENABLED
+RewriteCond %{REQUEST_URI} !^({{& env.base_path}})?vendor/
+RewriteRule ^(.*)$ maintenance.html?$1 [QSA,L]
+{{/is_maintenance}}
+{{^is_maintenance}}
 #RewriteCond %{REQUEST_URI} !^({{& env.base_path}})?vendor/
 #RewriteRule ^(.*)$ maintenance.html?$1 [QSA,L]
+{{/is_maintenance}}
 
+{{#is_root}}
+# ROOT SECTION
 # default is home/www
 RewriteRule ^({{& env.base_path}})?home/www/ - [L]
 
@@ -44,3 +53,4 @@ RewriteCond %{REQUEST_URI} !^({{& env.base_path}})?home/www/
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^({{& env.base_path}})?(.*)$ home/www/$2 [L]
+{{/is_root}}

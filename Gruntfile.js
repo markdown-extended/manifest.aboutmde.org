@@ -1,46 +1,59 @@
 
 // global app config
-var _GRUNT, _ENV,
-    _APP = {
+var _GRUNT, 
+    _ENV    = 'prod', 
+    _FLAGS  = {},
+    _APP    = {
+        // default cli options
+        default_options: {
+            dev:                false,
+            root:               false,
+            maintenance:        false
+        },
 
         // app paths
-        data_dir:               './data/',
-        pages_dir:              './pages/',
-        templates_dir:          './templates/',
-        tmp_dir:                './var/',
+        env_dir:                './build/env/',
+        data_dir:               './build/data/',
+        pages_dir:              './build/pages/',
+        templates_dir:          './build/templates/',
+        tmp_dir:                './tmp/',
         www_dir:                './www/',
+
+        // env configs
+        data_env:               'env.yml',
+        user_env:               './env.yml',
 
         // files masks
         html_ext:               '.html',
-        pages_src_all:          './pages/*.md',
-        data_src_all:           './data/*.yml',
+        pages_src_all:          '*.md',
+        data_src_all:           '*.yml',
 
         // mde contents
-        md_template:            './templates/md-template.html',
+        md_template:            'md-template.html',
 
         // templates(s)
-        template_page:          './templates/page-template.mustache',
-        template_meta_page:     './templates/meta-page-template.mustache',
-        template_htaccess:      './templates/htaccess.mustache',
+        template_page:          'page-template.mustache',
+        template_meta_page:     'meta-page-template.mustache',
+        template_htaccess:      'htaccess.mustache',
 
         // .htaccess
-        web_htaccess:           './www/.htaccess',
-        data_htaccess:          './var/config-htaccess.json',
+        web_htaccess:           '.htaccess',
+        data_htaccess:          'config-htaccess.json',
 
         // index page
-        web_index:              './www/index.html',
-        data_index:             './var/config-index.json',
-        data_src_index:         './pages/page.yml',
+        web_index:              'index.html',
+        data_index:             'config-index.json',
+        data_src_index:         'page.yml',
 
         // 404 meta page
-        web_404:                './www/404.html',
-        data_404:               './var/config-404.json',
-        data_src_404:           './pages/404/page.yml',
+        web_404:                '404.html',
+        data_404:               'config-404.json',
+        data_src_404:           '404/page.yml',
 
         // maintenance meta page
-        web_maintenance:        './www/maintenance.html',
-        data_maintenance:       './var/config-maintenance.json',
-        data_src_maintenance:   './pages/maintenance/page.yml',
+        web_maintenance:        'maintenance.html',
+        data_maintenance:       'config-maintenance.json',
+        data_src_maintenance:   'maintenance/page.yml',
 
         // tasks options
         markdown_options: function(){
@@ -62,20 +75,46 @@ var _GRUNT, _ENV,
         },
 
         // environment
-        env_prod: {
-            base_path:  '/'
-        },
-        env_dev: {
-            base_path:  '/GitHub_projects/markdown-extended/page-model/www/'
+        getEnvConfigPath:       function() {
+            // user environment ?
+            var envfile     = this.env_dir + _ENV + '/' + this.data_env,
+                userenvfile = _APP.user_env;
+            if (_ENV=='dev' && _GRUNT.file.exists(userenvfile)) {
+                return userenvfile;
+            } else {
+                return envfile;
+            }
         }
-    };
+    },
+    _APP_HELP = "\
+### \n\
+usage:    grunt (-d) (-v) [<task = 'default'>] [--dev] [–-root] [--maintenance] \n\
+\n\
+tasks:    htaccess          : generate the 'www/.htaccess' file \n\
+          index             : generate the 'www/index.html' file (based on 'build/pages/page.yml') \n\
+          404               : generate the 'www/404.html' file (based on 'build/pages/404/page.yml') \n\
+          maintenance       : generate the 'www/maintenance.html' file (based on 'build/pages/maintenance/page.yml') \n\
+          cleanup           : clean all generated and temporary files \n\
+          default           : 'htaccess' + 'index' + '404' + 'maintenance' tasks \n\
+          rebuild           : 'cleanup' + 'default' tasks \n\
+\n\
+options:  --dev             : load the 'dev' environment settings \n\
+          --root            : use this for 'root.aboutmde.org' \n\
+          --maintenance     : use this to enable the 'maintenance' mode \n\
+\n\
+All logic is stored in the 'Gruntfile.js'. \n\
+The special 'test' and 'debug' tasks can be used during development. \n\
+### \n\
+"
+    ;
 
 // custom data transformation
 var transformData = function (data)
 {
     // current env info
-    data.is_dev = (_ENV===true);
-    data.env    = (_ENV=='dev' ? _APP.env_dev : _APP.env_prod);
+    data.is_dev         = (_ENV==='dev');
+    data.is_maintenance = (_FLAGS.maintenance===true);
+    data.is_root        = (_FLAGS.root===true);
 
     if (data.page==undefined) {
         return data;
@@ -85,17 +124,17 @@ var transformData = function (data)
     if (data.page.page_logo == undefined) {
         data.page.page_logo = data.website.logo;
     }
-    for (var i=0; i<data.website.menu.length; i++) {
-        var slug = data.website.menu[i].slug,
+    for (var i=0; i<data.env.menu.length; i++) {
+        var slug = data.env.menu[i].slug,
             active = data.page.page_active || '';
         if (slug == active) {
-            data.website.menu[i].is_active = true;
-            data.page.page_link = data.website.menu[i].url;
+            data.env.menu[i].is_active = true;
+            data.page.page_link = data.env.menu[i].url;
             if (data.page.page_title == undefined) {
-                data.page.page_title = data.website.menu[i].title;
+                data.page.page_title = data.env.menu[i].title;
             }
         } else {
-            data.website.menu[i].is_active = false;
+            data.env.menu[i].is_active = false;
         }
     }
 
@@ -105,7 +144,7 @@ var transformData = function (data)
             // markdown content
             if (data.page.contents[j].markdown != undefined) {
                 var filename = data.page.contents[j].markdown,
-                    mdfile = _APP.tmp_dir + 'pages/' + filename.replace(_APP.html_ext, '') + _APP.html_ext;
+                    mdfile = _APP.tmp_dir + _APP.pages_dir + filename.replace(_APP.html_ext, '') + _APP.html_ext;
                 data.page.contents[j].content = _GRUNT.file.read(mdfile);
             } else {
                 if (data.page.contents[j].notes && data.page.contents[j].notes.length>0) {
@@ -125,8 +164,19 @@ var transformData = function (data)
 // grunt compilation
 module.exports = function(grunt) {
 
-    _GRUNT = grunt;
-    _ENV = (grunt.option('dev')!==undefined) ? 'dev' : 'prod';
+    _GRUNT  = grunt;
+
+    // cli arguments
+    var opt;
+    for (var index in _APP.default_options) {
+        opt = grunt.option(index);
+        _FLAGS[index] = opt || _APP.default_options[index];
+    }
+    // env flag
+    if (_FLAGS.dev==true) {
+        _ENV = 'dev';
+    }
+    grunt.log.writeflags(_FLAGS, 'App flags');
 
     grunt.loadNpmTasks('grunt-markdown');
     grunt.loadNpmTasks('grunt-merge-data');
@@ -139,7 +189,7 @@ module.exports = function(grunt) {
             index: {
                 files: [{
                     expand:     true,
-                    src:        _APP.pages_src_all,
+                    src:        _APP.pages_dir + _APP.pages_src_all,
                     dest:       _APP.tmp_dir,
                     ext:        _APP.html_ext
                 }]
@@ -149,20 +199,20 @@ module.exports = function(grunt) {
         merge_data: {
             options:            _APP.merge_data_options(),
             htaccess: {
-                src:            [ _APP.data_src_all ],
-                dest:           _APP.data_htaccess
+                src:            [ _APP.getEnvConfigPath() , _APP.data_dir + _APP.data_src_all ],
+                dest:           _APP.tmp_dir + _APP.data_htaccess
             },
             index: {
-                src:            [ _APP.data_src_all , _APP.data_src_index ],
-                dest:           _APP.data_index
+                src:            [ _APP.getEnvConfigPath() , _APP.data_dir + _APP.data_src_all , _APP.pages_dir + _APP.data_src_index ],
+                dest:           _APP.tmp_dir + _APP.data_index
             },
             meta_404: {
-                src:            [ _APP.data_src_all , _APP.data_src_404 ],
-                dest:           _APP.data_404
+                src:            [ _APP.getEnvConfigPath() , _APP.data_dir + _APP.data_src_all , _APP.pages_dir + _APP.data_src_404 ],
+                dest:           _APP.tmp_dir + _APP.data_404
             },
             meta_maintenance: {
-                src:            [ _APP.data_src_all , _APP.data_src_maintenance ],
-                dest:           _APP.data_maintenance
+                src:            [ _APP.getEnvConfigPath() , _APP.data_dir + _APP.data_src_all , _APP.pages_dir + _APP.data_src_maintenance ],
+                dest:           _APP.tmp_dir + _APP.data_maintenance
             }
         },
 
@@ -170,30 +220,30 @@ module.exports = function(grunt) {
             options:            _APP.mustache_render_options(),
             htaccess: {
                 files : [{
-                    template:   _APP.template_htaccess,
-                    data:       _APP.data_htaccess,
-                    dest:       _APP.web_htaccess
+                    template:   _APP.templates_dir + _APP.template_htaccess,
+                    data:       _APP.tmp_dir + _APP.data_htaccess,
+                    dest:       _APP.www_dir + _APP.web_htaccess
                 }]
             },
             index: {
                 files : [{
-                    template:   _APP.template_page,
-                    data:       _APP.data_index,
-                    dest:       _APP.web_index
+                    template:   _APP.templates_dir + _APP.template_page,
+                    data:       _APP.tmp_dir + _APP.data_index,
+                    dest:       _APP.www_dir + _APP.web_index
                 }]
             },
             meta_404: {
                 files : [{
-                    template:   _APP.template_meta_page,
-                    data:       _APP.data_404,
-                    dest:       _APP.web_404
+                    template:   _APP.templates_dir + _APP.template_meta_page,
+                    data:       _APP.tmp_dir + _APP.data_404,
+                    dest:       _APP.www_dir + _APP.web_404
                 }]
             },
             meta_maintenance: {
                 files : [{
-                    template:   _APP.template_meta_page,
-                    data:       _APP.data_maintenance,
-                    dest:       _APP.web_maintenance
+                    template:   _APP.templates_dir + _APP.template_meta_page,
+                    data:       _APP.tmp_dir + _APP.data_maintenance,
+                    dest:       _APP.www_dir + _APP.web_maintenance
                 }]
             }
         }
@@ -204,10 +254,28 @@ module.exports = function(grunt) {
     grunt.registerTask('index',         ['markdown:index','merge_data:index','mustache_render:index']);
     grunt.registerTask('404',           ['merge_data:meta_404','mustache_render:meta_404']);
     grunt.registerTask('maintenance',   ['merge_data:meta_maintenance','mustache_render:meta_maintenance']);
-    grunt.registerTask('default',       ['htaccess','index','404','maintenance']);
 
-    grunt.registerTask('test', 'a simple test space ...', function() {
-        _GRUNT.log.write('todo');
+    grunt.registerTask('cleanup', 'cleanup generated files', function(){
+        _GRUNT.file.delete(_APP.tmp_dir);
+        _GRUNT.file.delete(_APP.www_dir + _APP.web_htaccess);
+        _GRUNT.file.delete(_APP.www_dir + _APP.web_index);
+        _GRUNT.file.delete(_APP.www_dir + _APP.web_404);
+        _GRUNT.file.delete(_APP.www_dir + _APP.web_maintenance);
     });
 
+    grunt.registerTask('help', 'see cli available options', function() {
+        _GRUNT.log.write(_APP_HELP);
+    });
+
+    grunt.registerTask('debug', 'show current app options', function() {
+        _GRUNT.log.subhead('current app object:');
+        _GRUNT.log.writeflags(_APP);
+    });
+
+    grunt.registerTask('test', 'a simple test space ...', function() {
+        _GRUNT.log.write('todo ...');
+    });
+
+    grunt.registerTask('default',       ['htaccess','index','404','maintenance']);
+    grunt.registerTask('rebuild',       ['cleanup','default']);
 };
