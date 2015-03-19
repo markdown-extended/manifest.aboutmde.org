@@ -7,6 +7,7 @@ vendor/*
 tmp/*
 */tmp/*
 env.yml
+!build/env/*/env.yml
 
 # for the main repo only
 www/*.html
