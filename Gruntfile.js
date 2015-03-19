@@ -82,6 +82,9 @@ var _GRUNT,
             if (_ENV=='dev' && _GRUNT.file.exists(userenvfile)) {
                 return userenvfile;
             } else {
+                if (!_GRUNT.file.exists(envfile)) {
+                    _GRUNT.fail.fatal('environment config file "'+envfile+'" not found!');
+                }
                 return envfile;
             }
         }
