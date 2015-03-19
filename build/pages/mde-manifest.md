@@ -1,1 +1,1 @@
-../git_modules/manifest/mde-manifest.md
+../../git_modules/manifest/mde-manifest.md
