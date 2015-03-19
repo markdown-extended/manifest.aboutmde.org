@@ -15,7 +15,7 @@ function mdereminders_popup(url){
 $(function() {
     var website_email = '{{& website.contact}}';
     $('#website-mailto')
-        .attr('href', website_email)
+        .attr('href', 'mailto:'+website_email)
         .html(website_email);
 });
 </script>
