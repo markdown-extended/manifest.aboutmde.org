@@ -26,10 +26,10 @@ Then, setup your repository to "fork" the original <http://github.com/markdown-e
 
 Then you can update the following files to customize the page:
 
-    build/pages/page.yml                       // required
-    build/templates/page-content.mustache      // optional
-    build/templates/page-styles.mustache       // optional
-    build/templates/page-scripts.mustache      // optional
+    build/data/page/page.yml             // required
+    build/templates/page-content.j2      // optional
+    build/templates/page-styles.j2       // optional
+    build/templates/page-scripts.j2      // optional
 
 Then run [Grunt](http://gruntjs.com/):
 
@@ -67,6 +67,7 @@ The following files or directories are finally IGNORED when synchronizing on the
     .git*
     */.git/*
     .devtools*
+    config.(json|ya?ml)
     env.yml
     Gruntfile.js 
     package.json
@@ -74,6 +75,7 @@ The following files or directories are finally IGNORED when synchronizing on the
     bin/*
     node_modules/*
     build/*
+    tasks/*
     tmp/*
 
 
@@ -83,8 +85,8 @@ Dependencies
 ### NPM plugins
 
 -   <http://gruntjs.com/>
--   <https://www.npmjs.com/package/grunt-mustache-render>
--   <https://github.com/janl/mustache.js/>
+-   <https://www.npmjs.com/package/grunt-nunjucks-render>
+-   <http://mozilla.github.io/nunjucks/>
 -   <https://github.com/shinnn/grunt-merge-data>
 -   <https://github.com/shinnn/grunt-markdown>
 
