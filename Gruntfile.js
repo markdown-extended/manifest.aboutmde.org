@@ -43,9 +43,6 @@ return;
         nunjucks_render:    { options: app.getTaskOptions('nunjucks_render') }
     });
 
-    // actually load this plugin's tasks
-    grunt.loadTasks('tasks');
-
     // page(s) rendering
     grunt.registerTask('render', 'the page-model renderer', function() {
         var page        = (arguments.length>0 ? arguments[0] : 'all');

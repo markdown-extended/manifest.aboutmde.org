@@ -18,16 +18,20 @@ show_reminders_test_link: true
 
 contents:
 # a raw content
-- title:        "{CONTENT_TITLE}"
-  description:  "{CONTENT_DESCRIPTION}"
-  intro:        "{CONTENT_INTRO}"
-  content:              "{CONTENT}"
+- title:            "{CONTENT_TITLE}"
+  description:      "{CONTENT_DESCRIPTION}"
+  intro:            "{CONTENT_INTRO}"
+  content:          "{CONTENT}"
   notes:
-  - content:            "{CONTENT_NOTE_1}"
+  - "{CONTENT_NOTE_1}"
 # a markdown file content
-- title:        "{MD_CONTENT_TITLE}"
-  description:  "{MD_CONTENT_DESCRIPTION}"
-  markdown:     page-test
+- title:            "{MD_CONTENT_TITLE}"
+  description:      "{MD_CONTENT_DESCRIPTION}"
+  markdown:         page-test
+# a jinja2 content
+- title:            "{J2_CONTENT_TITLE}"
+  description:      "{J2_CONTENT_DESCRIPTION}"
+  j2:               "{CONTENT} with var: {{ website.shortname }}"
 
 modalbox_link:      "{MODALBOX_LINK}"
 modalbox:

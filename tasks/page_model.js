@@ -4,16 +4,18 @@
 
 'use strict';
 
-var path    = require('path');
-var lib     = require('grunt-nunjucks-render/lib/lib');
-var nlib    = require('nunjucks/src/lib');
+var path            = require('path');
+var lib             = require('grunt-nunjucks-render/lib/lib');
+var nlib            = require('nunjucks/src/lib');
+var renderString    = require('grunt-nunjucks-render/lib/render-string');
 
 // global app
-var PageModel = function(opts, grunt) {
+var PageModel = function(opts, grunt, config_file) {
     var _this           = this;
 
+    this.shortname      = 'page-model-app';
     this.grunt          = grunt || require('grunt');
-    this.user_conf      = 'config.+(json|ya?ml)';
+    this.user_conf_file = config_file || 'config.+(json|ya?ml)';
     this.options        = null;
     this.env            = 'prod';
     this.flags          = {};
@@ -28,25 +30,23 @@ var PageModel = function(opts, grunt) {
     // required app paths
     this.req_paths      = [ 'env', 'data', 'page', 'template', 'tmp', 'dest' ];
     // required app extensions
-    this.req_exts       = [ 'md', 'data', 'page', 'template', 'dest' ];
+    this.req_extensions = [ 'md', 'data', 'page', 'template', 'dest' ];
 
+    // find and load required user config file
     function findUserConfig()
     {
-        var file = _this.grunt.file.expand(_this.user_conf);
+        var file = _this.grunt.file.expand( lib.slashPath(process.cwd()) + _this.user_conf_file );
         if (file==[]) {
-            file = _this.grunt.file.expand( lib.slashPath(process.cwd()) + _this.user_conf );
-            if (file==[]) {
-                throw new Error('No configuration file found (searching "' + _this.user_conf + '")');
-            }
+            throw new Error('No configuration file found (searching "' + _this.user_conf_file + '")');
         }
         return file;
     };
-    this.defaults       = grunt.file.readJSON(findUserConfig());
 
     // init app with user options
     function init(opts)
     {
-        _this.options = lib.merge(_this.defaults, opts);
+        _this.defaults  = _this.grunt.file.readJSON(_this.user_conf);
+        _this.options   = lib.merge(_this.defaults, opts);
 
         // be sure to have all required paths with trailing slash
         for (var p in _this.req_paths) {
@@ -58,12 +58,12 @@ var PageModel = function(opts, grunt) {
         }
 
         // be sure to have all required extensions with leading point
-        for (var p in _this.req_exts) {
-            var ext = _this.req_exts[p];
-            if (_this.options.exts[ext]==undefined) {
+        for (var p in _this.req_extensions) {
+            var ext = _this.req_extensions[p];
+            if (_this.options.extensions[ext]==undefined) {
                 throw new Error('You must define app\'s "' + ext + '" file extension');
             }
-            _this.options.exts[ext] = lib.dotExtension(_this.options.exts[ext]);
+            _this.options.extensions[ext] = lib.dotExtension(_this.options.extensions[ext]);
         }
 
         // be sure to have fully qualified global data array
@@ -73,10 +73,8 @@ var PageModel = function(opts, grunt) {
             _this.options.global.data[i] = _this.resolve(_this.options.global.data[i], 'data');
         }
 
-        if (_this.grunt.option('debug')) {
-            _this.grunt.log.writeflags(_this.options, 'App options');
-        }
     };
+
     // distribute cli arguments
     function initFlags(defaults)
     {
@@ -90,10 +88,8 @@ var PageModel = function(opts, grunt) {
         if (_this.flags.dev==true) {
             _this.env = 'dev';
         }
-        if (_this.grunt.option('debug')) {
-            _this.grunt.log.writeflags(_this.flags, 'App flags');        
-        }
     };
+
     // prepare pages config
     function initPages(pages)
     {
@@ -108,7 +104,7 @@ var PageModel = function(opts, grunt) {
 
             // the destination
             if (pages[name].dest==undefined) {
-                pages[name].dest = name + _this.options.exts.dest;
+                pages[name].dest = name + _this.options.extensions.dest;
             }
             pages[name].dest = _this.resolve(pages[name].dest, 'dest', pages[name].ext);
 
@@ -133,30 +129,46 @@ var PageModel = function(opts, grunt) {
 
         }
         _this.pages = pages;
-        if (_this.grunt.option('debug')) {
-            _this.grunt.log.writeflags(_this.pages, 'App pages');        
-        }
     };
 
+    // actually initialize the whole app
+    this.user_conf = findUserConfig();
+    this.grunt.verbose.subhead('Setting up a PageModel app from config file "' + this.user_conf_file + '"');
+
     init(opts);
+    if (this.grunt.option('debug')) {
+        this.grunt.log.writeflags(this.options, this.shortname + ' options');
+    }
+
     initFlags(this.default_args);
+    if (this.grunt.option('debug')) {
+        this.grunt.log.writeflags(this.flags, this.shortname + ' flags');
+    }
+
     initPages(this.options.pages);
+    if (this.grunt.option('debug')) {
+        this.grunt.log.writeflags(this.pages, this.shortname + ' pages');
+    }
+
+    if (this.grunt.option('verbose')) {
+        this.grunt.log.writeln('+ ' + this.grunt.log.wordlist([this.shortname]));
+    }
 }
 
 // resolve an app file path
-PageModel.prototype.resolve = function(filepath, type, add_ext)
+PageModel.prototype.resolve = function(filepath, type, add_extension)
 {
     if (this.options.paths[type]==undefined) {
         throw new Error('Unknown file type "' + type + '"');
     }
 
-    var basedir = this.options.paths[type];
+    var basedir = this.getPath(type);
     if (filepath.substr(0, basedir.length) === basedir) {
         filepath = filepath.substr(basedir.length);
     }
 
-    if (add_ext!==false) {
-        var ext = this.options.exts[type];
+    if (add_extension!==false) {
+        var ext = this.getExtension(type);
         if (ext && filepath.slice(-(ext.length)) != ext) {
             filepath = filepath + ext;
         }
@@ -202,18 +214,26 @@ PageModel.prototype.transformData = function(data)
     // organize contents
     if (data.page.contents != undefined) {
         for (var j=0; j<data.page.contents.length; j++) {
+
             // markdown content
             if (data.page.contents[j].markdown != undefined) {
                 var filename = data.page.contents[j].markdown,
-                    ext = this.getExt('page'),
+                    ext = this.getExtension('page'),
                     dir = this.getTmpPath('page'),
                     mdfile = dir + filename.replace(ext, '') + ext;
                 if (this.grunt.file.exists(mdfile)) {
                     data.page.contents[j].content = this.grunt.file.read(mdfile);
                 } else {
-                    this.grunt.log.warn('Markdown file "' + mdfile + '" not found');
+                    throw new Error('Markdown file "' + mdfile + '" not found');
                 }
             }
+
+            // jinja content
+            if (data.page.contents[j].j2 != undefined) {
+                var str = data.page.contents[j].j2;
+                data.page.contents[j].content = renderString(str, data, this.options);
+            }
+
         }
     }
 
@@ -224,6 +244,11 @@ PageModel.prototype.transformData = function(data)
 
     // always return the full data
     return data;
+};
+
+PageModel.prototype.Nunjucksize = function(str)
+{
+    return str;
 };
 
 // get a task pages argument list
@@ -249,7 +274,7 @@ PageModel.prototype.getTaskOptions = function(task_name){
         case 'markdown':
             return {
                 template:       this.getPath('template') + this.options.global.md_template,
-                htmlExtension:  this.getExt('dest')
+                htmlExtension:  this.getExtension('dest')
             };
             break;
         case 'merge_data':
@@ -277,7 +302,7 @@ PageModel.prototype.getTaskFiles = function(task_name, page_name){
                 expand:     true,
                 src:        this.getPathGlob('page', 'md'),
                 dest:       this.getPath('tmp'),
-                ext:        this.getExt('page')
+                ext:        this.getExtension('page')
             };
             break;
         case 'merge_data':
@@ -307,13 +332,13 @@ PageModel.prototype.getTaskFiles = function(task_name, page_name){
 // environment
 PageModel.prototype.getEnvConfigPath = function() {
     // user environment ?
-    var envfile     = this.options.env_dir + this.env + '/' + this.options.data_env,
+    var envfile     = this.getPath('env') + this.env + '/' + this.options.data_env,
         userenvfile = this.options.user_env;
     if (this.env=='dev' && this.grunt.file.exists(userenvfile)) {
         return userenvfile;
     } else {
         if (!this.grunt.file.exists(envfile)) {
-            this.grunt.fail.fatal('environment config file "'+envfile+'" not found!');
+            throw new Error('Environment config file "' + envfile + '" not found!');
         }
         return envfile;
     }
@@ -381,25 +406,25 @@ PageModel.prototype.getPath = function(name)
 {
     return this.getOption(name, 'paths');
 };
-PageModel.prototype.getExt = function(name)
+PageModel.prototype.getExtension = function(name)
 {
-    return this.getOption(name, 'exts');
+    return this.getOption(name, 'extensions');
 };
-PageModel.prototype.getPathGlob = function(name, ext_name)
+PageModel.prototype.getPathGlob = function(name, extension_name)
 {
     var path    = this.getOption(name, 'paths');
-    var ext     = this.getOption((ext_name || name), 'exts');
+    var ext     = this.getOption((extension_name || name), 'extensions');
     return path + '*' + ext;
 };
 PageModel.prototype.getTmpPath = function(type, name)
 {
-    var tmpdir = this.getPath('tmp');
+    var tmpdir  = this.getPath('tmp');
     var typedir = this.getPath(type);
-    var typeext = this.getExt(type);
+    var typeext = this.getExtension(type);
     return (path.normalize(tmpdir + typedir) + (name!=undefined && name!=null ? name + typeext : ''));
 };
 
-// app help string
+// PageModel help string
 PageModel.help_string = "\
 ### \n\
 usage:    grunt (-d) (-v) [<task = 'default'>] [--dev] [–-root] [--maintenance] \n\
@@ -407,7 +432,7 @@ usage:    grunt (-d) (-v) [<task = 'default'>] [--dev] [–-root] [--maintenance
 tasks:    render[:page]     : render all or a list of pages (comma separated) \n\
           cleanup[:page]    : clean all or a list of pages (comma separated) and temporary files \n\
           default           : 'render:all' task \n\
-          rebuild           : 'clean:all' + 'render:all' tasks \n\
+          rebuild           : 'cleanup:all' + 'render:all' tasks \n\
 \n\
 options:  --dev             : load the 'dev' environment settings \n\
           --root            : use this for 'root.aboutmde.org' \n\
@@ -418,4 +443,5 @@ All customization is stored in the 'Gruntfile.js' and 'config.yml' files. \n\
 ### \n\
 ";
 
+// actually exports the PageModel app
 module.exports = PageModel;

@@ -24,9 +24,11 @@
             </h1>
         </div>
 
-        <div class="content" id="page-content" role="main">        
-            <div class="lead">{{ page.page_content | safe }}</div>
+        <div class="content" id="page-content" role="main">
+{% for content in page.contents %}
+            <div class="lead">{{ content.content | safe }}</div>
             <hr>
+{% endfor %}
         </div>
 
     </div>

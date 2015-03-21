@@ -28,7 +28,7 @@
     {% if content.notes %}
     <ul class="list-group small">
         {% for note in content.notes %}
-        <li class="list-group-item">{{ note.content | safe }}</li>
+        <li class="list-group-item">{{ note | safe }}</li>
         {% endfor %}
     </ul>
     {% endif %}

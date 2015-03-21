@@ -1,7 +1,7 @@
 {
     "data_env":         "env.yml",
     "user_env":         "./env.yml",
-    "exts": {
+    "extensions": {
         "md":           ".md",
         "data":         ".yml",
         "page":         ".html",
