@@ -3,15 +3,15 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{page.meta_title}} &bull; {{website.shortname}}</title>
-    {{#page.meta_description}}
-    <meta name="description" content="{{page.meta_description}}">
-    {{/page.meta_description}}
-    {{#page.meta_robots}}
-    <meta name="robots" content="{{page.meta_robots}}">
-    {{/page.meta_robots}}
+    <title>{{ page.meta_title }} &bull; {{ website.shortname }}</title>
+    {% if page.meta_description %}
+    <meta name="description" content="{{ page.meta_description }}">
+    {% endif %}
+    {% if page.meta_robots %}
+    <meta name="robots" content="{{ page.meta_robots }}">
+    {% endif %}
 
-    {{> page-styles}}
+    {% include "page-styles" %}
 
 </head>
 <body>
@@ -19,19 +19,21 @@
 
         <div class="page-header" id="page-header">
             <h1>
-                {{& page.page_title}}
-                <br class="visible-xs"> <small><em>{{& page.page_description}}</em></small>
+                {{ page.page_title | safe }}
+                <br class="visible-xs"> <small><em>{{ page.page_description | safe }}</em></small>
             </h1>
         </div>
 
-        <div class="content" id="page-content" role="main">        
-            <div class="lead">{{& page.page_content}}</div>
+        <div class="content" id="page-content" role="main">
+{% for content in page.contents %}
+            <div class="lead">{{ content.content | safe }}</div>
             <hr>
+{% endfor %}
         </div>
 
     </div>
 
-{{#env.piwik}}
+{% if env.piwik %}
 <!-- Piwik -->
 <script type="text/javascript">
   var _paq = _paq || [];
@@ -41,15 +43,15 @@
   _paq.push(['trackPageView']);
   _paq.push(['enableLinkTracking']);
   (function() {
-    var u="//{{server}}/";
+    var u="//{{ env.piwik.server | safe }}/";
     _paq.push(['setTrackerUrl', u+'piwik.php']);
-    _paq.push(['setSiteId', {{site_id}}]);
+    _paq.push(['setSiteId', {{ env.piwik.site_id }}]);
     var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
     g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
   })();
 </script>
-<noscript><p><img src="//{{server}}/piwik.php?idsite={{site_id}}" style="border:0;" alt="" /></p></noscript>
+<noscript><p><img src="//{{ env.piwik.server | safe }}/piwik.php?idsite={{ env.piwik.site_id }}" style="border:0;" alt="" /></p></noscript>
 <!-- End Piwik Code -->
-{{/env.piwik}}
+{% endif %}
 </body>
 </html>
